@@ -2,9 +2,7 @@ package webhib.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import webhib.model.User;
 import webhib.service.UserService;
 
@@ -12,48 +10,46 @@ import java.util.List;
 
 @Controller
 public class UserController {
-
     private final UserService userService;
-
     public UserController(UserService userService) {
         this.userService = userService;
     }
 
+    @GetMapping("/")
+    public String index() {
+        return "index";
+    }
 
-
-    @GetMapping("/users") //название ссылки
+    @GetMapping("/users")
     public String findAll(Model model) {
-        List<User> users = userService.getAllUsers();
-        model.addAttribute("users", users);
-        return "user-list"; //имя страницы
+        model.addAttribute("users", userService.getAllUsers());
+        return "user-list";
     }
 
-    @GetMapping("/user-create")
-    public String createUserForm(User user) {
-        return "user-create";
+    @GetMapping("/user-createform")
+    public String newUserForm (@ModelAttribute("user") User user) {
+    return "new";
     }
-
-    @PostMapping("user-create")
-    public String createUser(User user) {
-    userService.createOrUpdateUser(user);
-    return "redirect:/users";
-    }
-    @GetMapping("/user-delete/{id}")
-    public String deleteUser (@PathVariable("id") long id) {
-        userService.deleteUser(id);
-        return "redirect:/users";
-    }
-@GetMapping("user-update/{id}")
-    public String updateUserForm (@PathVariable("id") long id, Model model) {
-        User user = userService.readUser(id);
-        model.addAttribute("user", user);
-        return "user-update";
-
-    }
-@PostMapping("/user-update")
-    public String updateUser (User user) {
+    @PostMapping("/user-createform")
+    public String newUserCreate (@ModelAttribute("user") User user) {
         userService.createOrUpdateUser(user);
         return "redirect:/users";
     }
 
+    @GetMapping("/user-update/{id}")
+    public String editForm (Model model, @PathVariable("id") long id) {
+        model.addAttribute("user", userService.readUser(id));
+        return "edit";
+    }
+    @PatchMapping("/user-update/{id}")
+    public String editUser (@ModelAttribute("user") User user) {
+        userService.createOrUpdateUser(user);
+        return "redirect:/users";
+    }
+
+    @DeleteMapping ("/user-delete/{id}")
+    public String deleteUser (@PathVariable("id") long id) {
+        userService.deleteUser(id);
+        return "redirect:/users";
+    }
 }

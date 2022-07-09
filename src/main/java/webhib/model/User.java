@@ -13,24 +13,17 @@ public class User {
     private @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
-
     @Column(name = "name")
-    @NotEmpty(message = "Name should not be empty")
-    @Size(min = 2, max = 30, message = "Name should be between 2 to 30")
     private String firstName;
-
     @Column(name = "last_name")
     private String lastName;
-
-
     private String email;
-
 
     public User() {
 
     }
 
-    public User(String firstName, String lastName, String email, String password) {
+    public User(String firstName, String lastName, String email) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -71,7 +64,7 @@ public class User {
 
     @Override
     public String toString() {
-        return String.format("User [id = %d; firstName = %s; lastName = %s; email = %s; password = %s]",
+        return String.format("User [id = %d; firstName = %s; lastName = %s; email = %s]",
                 id, firstName, lastName, email);
     }
 }
